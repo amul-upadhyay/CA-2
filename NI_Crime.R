@@ -92,7 +92,7 @@ head(AllNICrimeData)
 #                   (D)                         #
 #################################################
 
-install.packages("tm")
+#install.packages("tm")
 library(tm)
 
 
@@ -107,4 +107,32 @@ head(AllNICrimeData)
 
 
 
+
+#################################################
+#                   (E)                         #
+#################################################
+#install.packages("stringr")
+#install.packages("dplyr")
+#install.packages("raster")
+
+library(stringr)
+library(dplyr)
+library(raster)
+
+AllNICrimeData
+
+AllNICrimeData$Location <- str_trim(AllNICrimeData$Location, "both")
+
+AllNICrimeData$Location <- trimws(AllNICrimeData$Location)
+
+AllNICrimeData[AllNICrimeData == ""] <- NA
+
+AllNICrimeData <- AllNICrimeData[!is.na(AllNICrimeData$Location),]
+
+random_crime_sample <- AllNICrimeData[sample(nrow(AllNICrimeData), 1000), ]
+
+random_crime_sample
+
+
+nrow(random_crime_sample)
 
