@@ -7,8 +7,6 @@ library(RCurl)
 
 ni_postcode_csv <- getURL("https://raw.githubusercontent.com/amul-upadhyay/CA-2/master/NIPostcodes.csv")
 
-
-
 ni_postcode_df <- read.csv(text = ni_postcode_csv, header = FALSE)
 
 
