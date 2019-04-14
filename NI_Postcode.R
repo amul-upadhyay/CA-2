@@ -1,9 +1,16 @@
                          
 
+install.packages("RCurl")
+library(RCurl)
 # Importing Ni_Postcode Data into R
 # The Header is kept false, because our data does not have  header fileds.
 
-ni_postcode_df<-  read.csv("NIPostcodes.csv", header = FALSE)
+ni_postcode_csv <- getURL("https://raw.githubusercontent.com/amul-upadhyay/CA-2/master/NIPostcodes.csv")
+
+
+
+ni_postcode_df <- read.csv(text = ni_postcode_csv, header = FALSE)
+
 
 # Checking class 
 
@@ -125,7 +132,8 @@ head(ni_postcode_df,5)
 
 Limvady_data <- ni_postcode_df %>%
   
-filter(str_detect(Town,fixed("LIMAVADY")) & str_detect(ni_postcode_df$Locality, fixed("LIMAVADY")) & str_detect(ni_postcode_df$Townland, fixed("LIMAVADY")))
+      filter(str_detect(Town,fixed("LIMAVADY")) & str_detect(ni_postcode_df$Locality, fixed("LIMAVADY"))
+       & str_detect(ni_postcode_df$Townland, fixed("LIMAVADY")))
 
 head(Limvady_data, 5)
 
