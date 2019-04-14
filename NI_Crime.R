@@ -65,8 +65,8 @@ str(asd)
 
 table(AllNICrimeData$`Crime type`)
 
-install.packages("plyr")
-library(plyr)
+#install.packages("plyr")
+#library(plyr)
 
 
 AllNICrimeData$'crime type categorized' <- revalue(
@@ -93,13 +93,7 @@ head(AllNICrimeData)
 #################################################
 
 #install.packages("tm")
-library(tm)
-
-
-
-
-stopwords("en")
-X <- removeWords(stopwords, AllNICrimeData$Location)
+#library(tm)
 
 
 AllNICrimeData$Location <- gsub("On or near", "\\1", AllNICrimeData$Location)
@@ -115,9 +109,9 @@ head(AllNICrimeData)
 #install.packages("dplyr")
 #install.packages("raster")
 
-library(stringr)
-library(dplyr)
-library(raster)
+#library(stringr)
+#library(dplyr)
+#library(raster)
 
 AllNICrimeData
 
@@ -135,4 +129,100 @@ random_crime_sample
 
 
 nrow(random_crime_sample)
+
+
+#################################################
+#                   NIPOSTCODEDATA              #
+#################################################
+
+# The Header is kept false, because our data does not have a header fileds.
+
+ni_postcode_df<-  read.csv("NIPostcodes.csv", header = FALSE)
+
+# Checking class 
+
+class(ni_postcode_df)
+
+# Checking type of dataframe
+
+typeof(ni_postcode_df)
+
+
+# Assigning header or column_names to our data frame
+
+names(ni_postcode_df) <- c("Organization Name", "Sub-building Name", "Building Name", "Number", "Primary THoroughfare", "Alt Thoroughfare", "Secondary Thorughtfare", "Locality", "Townland", "Town", "County", "Postcode", "X-Cordinate", "Y-Cordinate", "Primary Key")
+
+
+# Total Number of Rows and Columns
+
+nrow(ni_postcode_df)
+
+ncol(ni_postcode_df)
+
+# Viewing Structure of data
+
+str(ni_postcode_df)
+
+#Viewing top 10 rows of datadrame
+
+head(ni_postcode_df,10)
+
+colnames(ni_postcode_df)
+
+class(ni_postcode_df)
+# Checking Missing Values
+
+sum(is.empty.model(ni_postcode_df))
+
+#Replacing Missing Values with NA
+
+ni_postcode_df[ni_postcode_df == ""] <- NA
+
+head(ni_postcode_df)
+
+names(which.max(table(ni_postcode_df$Postcode)))
+
+
+####################################
+              (F)
+####################################
+
+
+ni_postcode_df$Postcode <- trimws(ni_postcode_df$Postcode)
+
+ni_postcode_df$`Primary THoroughfare` <- trimws(ni_postcode_df$`Primary THoroughfare`)
+
+random_crime_sample$Location <- trimws(random_crime_sample$Location)
+
+
+random_crime_sample$Location <- toupper(random_crime_sample$Location)
+
+
+
+random_crime_sample$Postcode<- apply(as.matrix(random_crime_sample$Location), MARGIN=1, function(x)(
+  {
+    
+    Filtered_Data <- ni_postcode_df %>% filter(`Primary THoroughfare` == x)
+    
+    Filtered_PostCode_Data <- Filtered_Data$Postcode
+    
+    Filtered_PostCode_Data <- na.exclude(Filtered_PostCode_Data)
+    
+    names(which.max(table(Filtered_PostCode_Data)))
+    
+  }))
+
+head(random_crime_sample)
+
+
+nrow(random_crime_sample)
+
+
+
+
+
+
+
+
+
 
