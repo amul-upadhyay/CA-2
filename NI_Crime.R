@@ -62,9 +62,11 @@ write.csv(AllNICrimeData, file = "AllNICrimeData.csv" )
 
 
 
-#################################################
-#                   (B)                         #
-#################################################
+######################################################################################
+#   (B)  Modify the structure of the newly created AllNICrimeData csv file and remove#
+# the following attributes: CrimeID, Reported by, Falls within, LSOA code, LSOA name,#
+# last outcome and context. Show the structure of the modified file.                 #      
+######################################################################################
 
 # Column names are checked.
 
@@ -81,9 +83,9 @@ AllNICrimeData
 str(AllNICrimeData)
 
 
-#################################################
-#                   (C)                         #
-#################################################
+#########################################################################
+#  (C)  Factorise the Crime type attribute. Show the modified structure.#                        #
+#########################################################################
 
 table(AllNICrimeData$`Crime type`)
 
@@ -109,9 +111,12 @@ head(AllNICrimeData)
 
 
 
-#################################################
-#                   (D)                         #
-#################################################
+###########################################################################################
+#   (D)   Modify the AllNICrimeData dataset so that the Location attribute contains only a#
+# street name. For example, the attribute value “On or near Westrock Square” should       #
+# be modified to only contain “Westrock Square”. Modify the resultant empty location      #
+# attributes with a suitable identifier.                                                  #
+###########################################################################################
 
 #install.packages("tm")
 #library(tm)
@@ -129,9 +134,24 @@ head(AllNICrimeData)
 
 
 
-#################################################
-#                   (E)                         #
-#################################################
+#######################################################################################
+# (E)   Choose 1000 random samples of crime data from the AllNICrimeData datase       #
+# where the location attribute contains location information. This means that the     #
+# location information should NOT contain an NA identifier. Store this data in a data #
+# frame called random_crime_sample. Then create a function called find_a_postcode     #
+# that takes as an input each location attribute from random_crime_sample and finds   #
+# a suitable postcode value from the postcode dataset.                                #
+#                                                                                     #
+# Use the CleanNIPostcodeData dataset you created in section 1 as the reference       #
+# data to find postcodes. If there are several postcodes discovered with the same     #
+# location, choose the most popular postcode for that location. Store the output from #
+# the find_a_postcode function in a suitably named variable in your random_crime      #
+# sample data frame. Make sure there are no missing postcodes in the output from      #
+# your function. Show the structure of this data frame once you’ve completed this task#
+# and count the number of records in the modified random_crime_sample data            #
+# frame.                                                                              #
+#######################################################################################
+
 #install.packages("stringr")
 #install.packages("dplyr")
 #install.packages("raster")
@@ -155,6 +175,8 @@ AllNICrimeData[AllNICrimeData == ""] <- NA
 AllNICrimeData <- AllNICrimeData[!is.na(AllNICrimeData$Location),]
 
 random_crime_sample <- AllNICrimeData[sample(nrow(AllNICrimeData), 1000), ]
+
+random_crime_sample <-unique(sample_n(AllNICrimeData[complete.cases(AllNICrimeData),], 1000))
 
 random_crime_sample
 
@@ -185,9 +207,15 @@ Clean_NI_Postocde_df$Postcode <- trimws(Clean_NI_Postocde_df$Postcode)
 
 Clean_NI_Postocde_df$Primary.THoroughfare <- trimws(Clean_NI_Postocde_df$Primary.THoroughfare)
 
+Clean_NI_Postocde_df$Primary.THoroughfare <- str_squish(Clean_NI_Postocde_df$Primary.THoroughfare)
+
+
 # Trimming Random Crime SAmple
 
 random_crime_sample$Location <- trimws(random_crime_sample$Location)
+
+random_crime_sample$Location <- str_squish(random_crime_sample$Location)
+
 
 # Converting Cases to upper
 
@@ -205,12 +233,15 @@ random_crime_sample$Postcode<- apply(as.matrix(random_crime_sample$Location), MA
     
     Filtered_PostCode_Data <- Filtered_Data$Postcode
     
-    Filtered_PostCode_Data <- na.exclude(Filtered_PostCode_Data)
+    random_crime_sample$Location <- as.character(random_crime_sample$Location)
     
     names(which.max(table(Filtered_PostCode_Data)))
     
   }))
 
+random_crime_sample[random_crime_sample == ""] <- NA
+
+random_crime_sample <- random_crime_sample[!is.na(random_crime_sample$Postcode), ]
 
 # Converting Postocde that is in list format to factor
 
@@ -219,6 +250,7 @@ random_crime_sample$Postcode <- vapply(random_crime_sample$Postcode, paste, coll
 # Viewing head of random_crime_sample
 
 head(random_crime_sample)
+
 
 class(random_crime_sample)
 
@@ -229,9 +261,9 @@ write.csv(random_crime_sample,file = "random_crime_sample.csv")
 #                   G                                #
 ######################################################
 
-#install.packages('gtools')
+# install.packages('gtools')
 
-#library(gtools)
+# library(gtools)
 
 # Creating Updated Random sample
 
@@ -249,7 +281,7 @@ updated_random_sample$Postcode <- trimws(updated_random_sample$Postcode)
 
 chart_data <- updated_random_sample
 
-chart_data$Postcode <-  mixedsort(chart_data$Postcode)
+chart_data$Postcode <-  mixedsort(updated_random_sample$Postcode)
 
 head(chart_data)
 
