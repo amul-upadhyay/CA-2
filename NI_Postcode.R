@@ -55,7 +55,7 @@ head(ni_postcode_df,10)
 
 names(ni_postcode_df) <- c("Organization Name", "Sub-building Name", "Building Name", "Number", "Primary THoroughfare", "Alt Thoroughfare", "Secondary Thorughtfare", "Locality", "Townland", "Town", "County", "Postcode", "X-Cordinate", "Y-Cordinate", "Primary Key")
 
-
+   
 colnames(ni_postcode_df)
 
 ###########################################################################################
