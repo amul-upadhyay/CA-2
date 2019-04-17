@@ -61,6 +61,8 @@ nrow(AllNICrimeData)
 write.csv(AllNICrimeData, file = "AllNICrimeData.csv" )
 
 
+str(AllNICrimeData)
+
 
 ######################################################################################
 #   (B)  Modify the structure of the newly created AllNICrimeData csv file and remove#
@@ -251,19 +253,24 @@ random_crime_sample$Postcode <- vapply(random_crime_sample$Postcode, paste, coll
 
 head(random_crime_sample)
 
+nrow(random_crime_sample)
 
 class(random_crime_sample)
 
 write.csv(random_crime_sample,file = "random_crime_sample.csv")
 
+colnames(random_crime_sample)
 
-######################################################
-#                   G                                #
-######################################################
+
+#########################################################################################
+#   (G) ) Create a bar plot of the crime type from the chart_data data frame. Show a    #
+# suitable main title for the bar chart, and suitable x and y-axis labels. Make sure all#
+# labels on the x-axis can be read. Show the bar plot in your CA document.              #                #
+#########################################################################################
 
 # install.packages('gtools')
 
-# library(gtools)
+ #library(gtools)
 
 # Creating Updated Random sample
 
@@ -287,7 +294,7 @@ head(chart_data)
 
 # Sort the chart_data data frame by crime.type
 
-chart_data$Crime.type <- sort(chart_data$Crime.type)
+chart_data$`Crime type` <- sort(chart_data$`Crime type`)
 
 head(chart_data)
 
@@ -296,30 +303,15 @@ head(chart_data)
 #                (H)                          #
 ###############################################
 
-# here we gets the colors for unique crime type
-palette <- RColorBrewer::brewer.pal(length(unique(chart_data$Crime.type)),name = 'Set1')
-
-# Lets create a frequency table for types of Crime.
-counts <- table(chart_data$Crime.type)
-print(counts)
-
-# Create a bar plot of the crime type from the chart_data data frame. 
-barplot(counts,
-        xlab='Offence Type',ylab='Crime Rate',
-        main='Crime Statistics',
-        col=counts,col.main='Blue')
 
 
+# Lets create a Bar Plot graph for types of Crime.
 
+counts <- table(chart_data$`Crime type`)
+x <- barplot(counts, xaxt="n", xlab= " Crime Type", ylab = "Number of Crimes",
+             main = "Frequency of various crime types", density = 50, 
+             col = "blue", border = "black")
 
+labs <- paste(names(counts), "")
 
-
-
-
-
-
-
-
-
-
-
+text(cex=0.85, x=x-.15, y=-0.15, labs, xpd=TRUE, srt=30, las=2)
